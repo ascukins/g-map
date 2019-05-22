@@ -1,0 +1,21 @@
+<agm-map
+  [latitude]="defaultLatitude"
+  [longitude]="defaultLongitude"
+  (mapClick)="onMapClick($event)"
+>
+  <agm-marker
+    *ngFor="let marker of markers"
+    [latitude]="marker.latitude"
+    [longitude]="marker.longitude"
+    [label]="marker.label"
+  >
+  </agm-marker>
+</agm-map>
+<br />
+<button
+  mat-raised-button
+  color="primary"
+  (click)="onMarkMyLocationClick($event)"
+>
+  Mark My Location
+</button>
