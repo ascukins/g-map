@@ -21,7 +21,15 @@ export class GmapComponent implements OnInit {
   ngOnInit() {
     this.gmapService.readMarkersFromIDB().then(
       (markersObject: any) => {
-        this.markers = markersObject.value || [];
+        if (markersObject) {
+          this.markers = markersObject.value;
+        }
+        this.markers = this.markers || [];
+        this.gmapService.mapMarkers = this.markers;
+      }
+      ,
+      () => {
+        this.markers = [];
         this.gmapService.mapMarkers = this.markers;
       }
     );
