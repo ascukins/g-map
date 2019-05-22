@@ -35,7 +35,7 @@ import { environment } from '../environments/environment';
     MatListModule,
     BrowserAnimationsModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBKoBvXWJAzFWAqbOYXhxPAuo4-Tnod2zc'
+      apiKey: 'AIzaSyDdsvg2ISZzk72RLSPvyFSwh5SHpxiW6QI'
     }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
