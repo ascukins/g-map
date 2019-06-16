@@ -1,6 +1,6 @@
 <agm-map
-  [latitude]="defaultLatitude"
-  [longitude]="defaultLongitude"
+  [latitude]="constantsService.defaultLatitude"
+  [longitude]="constantsService.defaultLongitude"
   (mapClick)="onMapClick($event)"
 >
   <agm-marker

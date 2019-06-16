@@ -10,7 +10,7 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a
-        *ngFor="let item of gmapService.mainMenuContents; index as i"
+        *ngFor="let item of constantsService.mainMenuContents; index as i"
         (click)="onMenuClick(i)"
         mat-list-item
         href="#"
@@ -29,7 +29,7 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>{{ gmapService.mainMenuContents[choice].longName }}</span>
+      <span>{{ constantsService.mainMenuContents[choice].longName }}</span>
     </mat-toolbar>
     <!-- Add Content Here -->
     <ng-content></ng-content>

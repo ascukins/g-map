@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { GmapService } from 'src/app/services/gmap.service';
 import { IMarker } from 'src/app/models/i-marker';
+import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
   selector: 'app-gmap',
@@ -10,13 +11,8 @@ import { IMarker } from 'src/app/models/i-marker';
 export class GmapComponent implements OnInit {
 
   markers: IMarker[] = [];
-  defaultLatitude: number;
-  defaultLongitude: number;
 
-  constructor(public gmapService: GmapService) {
-    this.defaultLatitude = gmapService.defaultLatitude;
-    this.defaultLongitude = gmapService.defaultLongitude;
-  }
+  constructor(public gmapService: GmapService, public constantsService: ConstantsService) { }
 
   ngOnInit() {
     this.gmapService.readMarkersFromIDB().then(

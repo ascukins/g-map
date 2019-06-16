@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IMarker } from '../models/i-marker';
 import { IndexedDbService } from './indexed-db.service';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,23 +12,19 @@ export class GmapService {
   store = 'main';
   version = 1;
   db: any;
-  defaultLatitude = 56.9547;
-  defaultLongitude = 24.1144;
-
-  public mainMenuContents = [
-    {
-      shortName: 'Map',
-      longName: 'Clickable Google Map'
-    },
-    {
-      shortName: 'Marker List',
-      longName: 'Map Marker Coordinate List'
-    },
-  ];
 
   public mapMarkers: IMarker[] = [];
 
   constructor(public indexedDbService: IndexedDbService) { }
+
+  public iDBGetMarkers() {
+    return from(this.initIDB().then(() => this.indexedDbService.readFromStore(this.db, this.store, 'markers'))).pipe(
+      map((obj: any) => obj.value)
+    );
+  }
+
+
+
 
   addMarker(latitude: number, longitude: number, label: string) {
     this.mapMarkers = this.mapMarkers || [];

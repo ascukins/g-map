@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GmapService } from 'src/app/services/gmap.service';
+import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -19,7 +20,9 @@ export class MainNavComponent {
       map(result => result.matches)
     );
 
-  constructor(private breakpointObserver: BreakpointObserver, public gmapService: GmapService) { }
+  constructor(private breakpointObserver: BreakpointObserver,
+              public gmapService: GmapService,
+              public constantsService: ConstantsService) { }
 
   onMenuClick(i: number) {
     this.choice = i;
