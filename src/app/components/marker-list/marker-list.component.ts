@@ -17,21 +17,11 @@ export class MarkerListComponent implements OnInit {
   markers: IMarkers;
   selectedOptions = [];
 
-  constructor(private store: Store<AppState>, public gmapService: GmapService) {
+  constructor(private store: Store<AppState>, public gmapService: GmapService) { }
 
-  }
-
-  ngOnInit() {
-    this.store.dispatch(new MarkerActions.DBGetMarkers());
-    // this.markers = this.gmapService.mapMarkers;
-    // this.gmapService.iDBGetMarkers().subscribe((markers: IMarkers) => {
-    //   this.markers = markers;
-    //   this.store.dispatch(new MarkerActions.GetMarkers(this.markers));
-    // });
-  }
+  ngOnInit() { }
 
   onGetMarkersClick() {
-//    this.store.dispatch(new MarkerActions.GetMarkers(this.markers));
     this.store.dispatch(new MarkerActions.DBGetMarkers());
   }
 

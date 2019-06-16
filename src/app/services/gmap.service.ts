@@ -3,6 +3,8 @@ import { IMarker } from '../models/i-marker';
 import { IndexedDbService } from './indexed-db.service';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { State } from '@ngrx/store';
+import { AppState } from '../app.state';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class GmapService {
 
   public mapMarkers: IMarker[] = [];
 
-  constructor(public indexedDbService: IndexedDbService) { }
+  constructor(public indexedDbService: IndexedDbService, private state: State<AppState>) { }
 
   public iDBGetMarkers() {
     return from(this.initIDB().then(() => this.indexedDbService.readFromStore(this.db, this.store, 'markers'))).pipe(
@@ -23,37 +25,12 @@ export class GmapService {
     );
   }
 
-
-
-
-  addMarker(latitude: number, longitude: number, label: string) {
-    this.mapMarkers = this.mapMarkers || [];
-    this.mapMarkers.push({ latitude, longitude, label });
-    this.writeMarkersToIDB();
-  }
-
-  clearMarker(position: number) {
-    if (Array.isArray(this.mapMarkers)) {
-      this.mapMarkers.splice(position, 1);
-    }
-    this.writeMarkersToIDB();
-    return this.mapMarkers;
-  }
-
-  clearAllMarkers() {
-    this.mapMarkers = [];
-    this.writeMarkersToIDB();
-    return this.mapMarkers;
-  }
-
-  public async readMarkersFromIDB() {
-    await this.initIDB();
-    return this.indexedDbService.readFromStore(this.db, this.store, 'markers');
-  }
-
-  public async writeMarkersToIDB() {
-    await this.initIDB();
-    this.indexedDbService.writeToStore(this.db, this.store, { entity_id: 'markers', value: this.mapMarkers });
+  public iDBPutMarkers() {
+    return from(
+      this.initIDB().then(
+        () => this.indexedDbService.writeToStore(this.db, this.store, { entity_id: 'markers', value: this.state.getValue().markers })
+      )
+    );
   }
 
   private async initIDB() {

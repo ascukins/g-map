@@ -5,8 +5,10 @@ import { IMarker, IMarkers } from 'src/app/models/i-marker';
 export const ADD_MARKER = '[MARKER] Add';
 export const REMOVE_MARKER = '[MARKER] Remove';
 export const REMOVE_ALL_MARKERS = '[MARKERS] Remove All';
-export const GET_MARKERS = '[MARKERS] Get';
+
+export const GET_MARKERS = '[MARKERS] Get from payload';
 export const DB_GET_MARKERS = '[MARKERS] Get from IndexedDB';
+export const MARKERS_SAVED = '[MARKERS] Saved to IndexedDB';
 
 // Actions
 export class AddMarker implements Action {
@@ -34,6 +36,9 @@ export class DBGetMarkers implements Action {
   constructor() { }
 }
 
+export class MarkersSaved implements Action {
+  readonly type = MARKERS_SAVED;
+  constructor() { }
+}
 
-
-export type Actions = AddMarker | RemoveMarker | GetMarkers | RemoveAllMarkers | DBGetMarkers;
+export type Actions = AddMarker | RemoveMarker | GetMarkers | RemoveAllMarkers | DBGetMarkers | MarkersSaved;

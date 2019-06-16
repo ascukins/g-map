@@ -13,11 +13,23 @@ export class MarkerEffects {
     mergeMap(() => this.gmapService.iDBGetMarkers()
       .pipe(
         map(markers =>
-          // ({ type: '[Movies API] Movies Loaded Success', payload: markers })
           new MarkerActions.GetMarkers(markers)
         ),
         catchError(() => EMPTY)
     ))
+  )
+  );
+
+  saveMarkers$ = createEffect(() => this.actions$.pipe(
+    ofType(MarkerActions.ADD_MARKER, MarkerActions.REMOVE_MARKER, MarkerActions.REMOVE_ALL_MARKERS),
+    mergeMap(
+      () => this.gmapService.iDBPutMarkers().pipe(
+        map(() =>
+          new MarkerActions.MarkersSaved()
+        ),
+        catchError(() => EMPTY)
+      )
+    )
   )
   );
 

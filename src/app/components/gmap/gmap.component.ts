@@ -1,7 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { GmapService } from 'src/app/services/gmap.service';
-import { IMarker } from 'src/app/models/i-marker';
+import { IMarkers } from 'src/app/models/i-marker';
 import { ConstantsService } from 'src/app/services/constants.service';
+import { Store, State } from '@ngrx/store';
+import { AppState } from 'src/app/app.state';
+import { Observable } from 'rxjs';
+import * as MarkerActions from 'src/app/actions/marker.actions';
 
 @Component({
   selector: 'app-gmap',
@@ -10,43 +13,33 @@ import { ConstantsService } from 'src/app/services/constants.service';
 })
 export class GmapComponent implements OnInit {
 
-  markers: IMarker[] = [];
+  markers$: Observable<IMarkers> = this.store.select('markers');
+  markersCache: IMarkers = [];
 
-  constructor(public gmapService: GmapService, public constantsService: ConstantsService) { }
+  constructor(public constantsService: ConstantsService, private store: Store<AppState>, private state: State<AppState>) { }
 
-  ngOnInit() {
-    this.gmapService.readMarkersFromIDB().then(
-      (markersObject: any) => {
-        if (markersObject) {
-          this.markers = markersObject.value;
-        }
-        this.markers = this.markers || [];
-        this.gmapService.mapMarkers = this.markers;
-      }
-      ,
-      () => {
-        this.markers = [];
-        this.gmapService.mapMarkers = this.markers;
-      }
-    );
-  }
+  ngOnInit() { }
 
   onMapClick(event) {
-    this.gmapService.addMarker(event.coords.lat, event.coords.lng, (this.markers.length + 1).toString());
+    this.store.dispatch(new MarkerActions.AddMarker({
+      latitude: event.coords.lat,
+      longitude: event.coords.lng,
+      label: (this.state.getValue().markers.length + 1).toString(),
+    }));
   }
 
   onMarkMyLocationClick(event) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.gmapService.addMarker(position.coords.latitude, position.coords.longitude, 'Me');
+        this.store.dispatch(new MarkerActions.AddMarker({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          label: 'Me',
+        }));
       });
     } else {
       alert('Geolocation is not supported by this browser.');
     }
-  }
-
-  onClearAllMarkersClick() {
-    this.gmapService.clearAllMarkers();
   }
 
 }
