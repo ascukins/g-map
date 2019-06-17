@@ -3,3 +3,5 @@ export interface IMarker {
   longitude: number;
   label: string;
 }
+
+export type IMarkers = IMarker[];

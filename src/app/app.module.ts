@@ -14,6 +14,11 @@ import { GmapService } from './services/gmap.service';
 import { MarkerListComponent } from './components/marker-list/marker-list.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from './reducers/marker.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { MarkerEffects } from './effects/marker.effects';
+
 
 
 @NgModule({
@@ -35,11 +40,19 @@ import { environment } from '../environments/environment';
     MatListModule,
     BrowserAnimationsModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDdsvg2ISZzk72RLSPvyFSwh5SHpxiW6QI'
+      apiKey: environment.mapApiKey,
     }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    StoreModule.forRoot({
+      markers: reducer,
+    }),
+    EffectsModule.forRoot([MarkerEffects]),
   ],
   providers: [GmapService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+
+export class AppModule {
+  constructor() { }
+ }

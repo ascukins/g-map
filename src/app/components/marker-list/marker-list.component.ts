@@ -1,32 +1,38 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GmapService } from 'src/app/services/gmap.service';
-import { IMarker } from 'src/app/models/i-marker';
+import { IMarkers } from 'src/app/models/i-marker';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.state';
+import * as MarkerActions from 'src/app/actions/marker.actions';
 
 @Component({
   selector: 'app-marker-list',
   templateUrl: './marker-list.component.html',
   styleUrls: ['./marker-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkerListComponent implements OnInit {
-  markers: IMarker[];
+  markers$: Observable<IMarkers> = this.store.select('markers');
+  markers: IMarkers;
   selectedOptions = [];
 
-  constructor(public gmapService: GmapService, private cdr: ChangeDetectorRef) {
-    this.markers = gmapService.mapMarkers;
-  }
+  constructor(private store: Store<AppState>, public gmapService: GmapService) { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  onGetMarkersClick() {
+    this.store.dispatch(new MarkerActions.DBGetMarkers());
   }
 
   onClearAllMarkersClick() {
-    this.markers = this.gmapService.clearAllMarkers();
+    this.store.dispatch(new MarkerActions.RemoveAllMarkers());
   }
 
   onClearSelectedMarkersClick() {
     const positions = this.selectedOptions.map(x => x.value);
     positions.sort((b, a) => a - b);
-    positions.forEach((p) => this.gmapService.clearMarker(p));
+    positions.forEach((p) => this.store.dispatch(new MarkerActions.RemoveMarker(p)));
     this.selectedOptions = [];
   }
 

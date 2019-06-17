@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { IMarker } from '../models/i-marker';
 import { IndexedDbService } from './indexed-db.service';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { State } from '@ngrx/store';
+import { AppState } from '../app.state';
 
 @Injectable({
   providedIn: 'root'
@@ -10,52 +14,23 @@ export class GmapService {
   store = 'main';
   version = 1;
   db: any;
-  defaultLatitude = 56.9547;
-  defaultLongitude = 24.1144;
-
-  public mainMenuContents = [
-    {
-      shortName: 'Map',
-      longName: 'Clickable Google Map'
-    },
-    {
-      shortName: 'Marker List',
-      longName: 'Map Marker Coordinate List'
-    },
-  ];
 
   public mapMarkers: IMarker[] = [];
 
-  constructor(public indexedDbService: IndexedDbService) { }
+  constructor(public indexedDbService: IndexedDbService, private state: State<AppState>) { }
 
-  addMarker(latitude: number, longitude: number, label: string) {
-    this.mapMarkers = this.mapMarkers || [];
-    this.mapMarkers.push({ latitude, longitude, label });
-    this.writeMarkersToIDB();
+  public iDBGetMarkers() {
+    return from(this.initIDB().then(() => this.indexedDbService.readFromStore(this.db, this.store, 'markers'))).pipe(
+      map((obj: any) => obj.value)
+    );
   }
 
-  clearMarker(position: number) {
-    if (Array.isArray(this.mapMarkers)) {
-      this.mapMarkers.splice(position, 1);
-    }
-    this.writeMarkersToIDB();
-    return this.mapMarkers;
-  }
-
-  clearAllMarkers() {
-    this.mapMarkers = [];
-    this.writeMarkersToIDB();
-    return this.mapMarkers;
-  }
-
-  public async readMarkersFromIDB() {
-    await this.initIDB();
-    return this.indexedDbService.readFromStore(this.db, this.store, 'markers');
-  }
-
-  public async writeMarkersToIDB() {
-    await this.initIDB();
-    this.indexedDbService.writeToStore(this.db, this.store, { entity_id: 'markers', value: this.mapMarkers });
+  public iDBPutMarkers() {
+    return from(
+      this.initIDB().then(
+        () => this.indexedDbService.writeToStore(this.db, this.store, { entity_id: 'markers', value: this.state.getValue().markers })
+      )
+    );
   }
 
   private async initIDB() {

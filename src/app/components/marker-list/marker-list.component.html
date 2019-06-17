@@ -1,29 +1,44 @@
-<ng-container *ngIf="markers[0]">
-  <mat-selection-list
-    #list
-    (selectionChange)="onSelectionChange(list.selectedOptions.selected)"
-  >
-    <mat-list-option *ngFor="let marker of markers; index as i" [value]="i">
-      <span matListAvatar>
-        <h3 matLine>{{ marker.label }}</h3>
-      </span>
-      <mat-icon matListIcon>place</mat-icon>
-      <p matLine></p>
-      <p matLine>Latitude: {{ marker.latitude }}</p>
-      <p matLine>Longitude: {{ marker.longitude }}</p>
-    </mat-list-option>
-  </mat-selection-list>
-  <br /><br />
-  <button
-    mat-raised-button
-    color="accent"
-    (click)="onClearSelectedMarkersClick($event)"
-  >
-    Clear Selected Markers
-  </button>
-  <br /><br />
-</ng-container>
+<ng-container *ngIf="markers$ | async as markers">
+  <ng-container *ngIf="markers[0]" class="button-container">
+    <mat-selection-list
+      #list
+      (selectionChange)="onSelectionChange(list.selectedOptions.selected)"
+    >
+      <mat-list-option *ngFor="let marker of markers; index as i" [value]="i">
+        <span matListAvatar>
+          <h3 matLine>{{ marker.label }}</h3>
+        </span>
+        <mat-icon matListIcon>place</mat-icon>
+        <p matLine></p>
+        <p matLine>Latitude: {{ marker.latitude }}</p>
+        <p matLine>Longitude: {{ marker.longitude }}</p>
+      </mat-list-option>
+    </mat-selection-list>
+    <br /><br />
 
-<ng-container *ngIf="!markers[0]">
-  Marker list is empty.
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="onClearAllMarkersClick($event)"
+      class="right-margin"
+    >
+      Clear ALL Markers
+    </button>
+
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="onClearSelectedMarkersClick($event)"
+      class="right-margin"
+    >
+      Clear Selected Markers
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="!markers[0]">
+    Marker list is empty.
+    <br /><br />
+  </ng-container>
+
+  <!-- <button mat-raised-button color="primary" (click)="onGetMarkersClick($event)">    Get Markers  </button> -->
 </ng-container>
