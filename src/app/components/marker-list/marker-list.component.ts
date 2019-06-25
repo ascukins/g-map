@@ -22,17 +22,17 @@ export class MarkerListComponent implements OnInit {
   ngOnInit() { }
 
   onGetMarkersClick() {
-    this.store.dispatch(new MarkerActions.DBGetMarkers());
+    this.store.dispatch(MarkerActions.dbGetMarkers());
   }
 
   onClearAllMarkersClick() {
-    this.store.dispatch(new MarkerActions.RemoveAllMarkers());
+    this.store.dispatch(MarkerActions.removeAllMarkers());
   }
 
   onClearSelectedMarkersClick() {
     const positions = this.selectedOptions.map(x => x.value);
     positions.sort((b, a) => a - b);
-    positions.forEach((p) => this.store.dispatch(new MarkerActions.RemoveMarker(p)));
+    positions.forEach((p) => this.store.dispatch(MarkerActions.removeMarker({ id: p })));
     this.selectedOptions = [];
   }
 

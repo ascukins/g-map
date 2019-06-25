@@ -9,11 +9,11 @@ import * as MarkerActions from 'src/app/actions/marker.actions';
 export class MarkerEffects {
 
   loadMarkers$ = createEffect(() => this.actions$.pipe(
-    ofType(MarkerActions.DB_GET_MARKERS),
+    ofType(MarkerActions.dbGetMarkers.type),
     mergeMap(() => this.gmapService.iDBGetMarkers()
       .pipe(
         map(markers =>
-          new MarkerActions.GetMarkers(markers)
+          MarkerActions.getMarkers({markers})
         ),
         catchError(() => EMPTY)
     ))
@@ -21,11 +21,11 @@ export class MarkerEffects {
   );
 
   saveMarkers$ = createEffect(() => this.actions$.pipe(
-    ofType(MarkerActions.ADD_MARKER, MarkerActions.REMOVE_MARKER, MarkerActions.REMOVE_ALL_MARKERS),
+    ofType(MarkerActions.addMarker.type, MarkerActions.removeMarker.type, MarkerActions.removeAllMarkers.type),
     mergeMap(
       () => this.gmapService.iDBPutMarkers().pipe(
         map(() =>
-          new MarkerActions.MarkersSaved()
+          MarkerActions.markersSaved()
         ),
         catchError(() => EMPTY)
       )

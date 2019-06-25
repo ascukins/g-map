@@ -21,21 +21,23 @@ export class GmapComponent implements OnInit {
   ngOnInit() { }
 
   onMapClick(event) {
-    this.store.dispatch(new MarkerActions.AddMarker({
+    const marker = {
       latitude: event.coords.lat,
       longitude: event.coords.lng,
       label: (this.state.getValue().markers.length + 1).toString(),
-    }));
+    };
+    this.store.dispatch(MarkerActions.addMarker({ marker }));
   }
 
   onMarkMyLocationClick(event) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.store.dispatch(new MarkerActions.AddMarker({
+        const marker = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           label: 'Me',
-        }));
+        };
+        this.store.dispatch(MarkerActions.addMarker({ marker }));
       });
     } else {
       alert('Geolocation is not supported by this browser.');
