@@ -1,20 +1,20 @@
 import * as MarkerActions from 'src/app/actions/marker.actions';
 import { IMarkers } from 'src/app/models/i-marker';
 
-export function reducer(state: IMarkers = [], action: MarkerActions.Actions) {
+export function reducer(state: IMarkers = [], action: any) { ///////////////////// TODO FIX TYPE ANY !!!!!!!!!!!!!!!!!!!!!!!!
   switch (action.type) {
-    case MarkerActions.GET_MARKERS:
-      return action.payload.slice();
+    case MarkerActions.getMarkers.type:
+      return action.markers.slice();
 
-    case MarkerActions.ADD_MARKER:
-      return [...state, action.payload];
+    case MarkerActions.addMarker.type:
+      return [...state, action.marker];
 
-    case MarkerActions.REMOVE_MARKER:
+    case MarkerActions.removeMarker.type:
       const newState = state.slice();
-      newState.splice(action.payload, 1);
+      newState.splice(action.id, 1);
       return newState;
 
-    case MarkerActions.REMOVE_ALL_MARKERS:
+    case MarkerActions.removeAllMarkers.type:
       return [];
 
     default:

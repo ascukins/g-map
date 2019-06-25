@@ -15,7 +15,7 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(new MarkerActions.DBGetMarkers());
+    this.store.dispatch(MarkerActions.dbGetMarkers());
   }
 
   ngOnDestroy() {
